@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import Image from "next/image";
 import { Github, Linkedin, Mail, ChevronDown, Users } from "lucide-react";
 import type { Member, TeamData, TierMembers, MemberTierGroup } from "@/types/team";
@@ -150,6 +150,193 @@ function getDomainMemberSplit(domain: string, members: Member[]): {
   };
 }
 
+interface TiltMemberCardProps {
+  member: Member;
+  index: number;
+  activeMemberId: string | null;
+  setActiveMemberId: React.Dispatch<React.SetStateAction<string | null>>;
+  memberMasks: Record<string, number>;
+}
+
+const TiltMemberCard: React.FC<TiltMemberCardProps> = ({
+  member,
+  index,
+  activeMemberId,
+  setActiveMemberId,
+  memberMasks,
+}) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const colorIndex = index % 4;
+  const maskIndex = memberMasks[member._id] ?? (index % masks.length);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = -((y - centerY) / centerY) * 12;
+    const rotateY = ((x - centerX) / centerX) * 12;
+
+    el.style.transition = "transform 0.1s ease-out";
+    el.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.03, 1.03, 1.03)`;
+  };
+
+  const handleMouseLeave = () => {
+    const el = cardRef.current;
+    if (!el) return;
+    el.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+    el.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={() =>
+        setActiveMemberId((prev) =>
+          prev === member._id ? null : member._id
+        )
+      }
+      style={{
+        transformStyle: "preserve-3d",
+      }}
+      className="group relative w-full max-w-[80%] sm:max-w-[220px] mx-auto select-none z-10 hover:z-30 transition-shadow cursor-pointer"
+    >
+      {member.photoUrl && (
+        <div
+          className="mb-4 relative"
+          style={{ transform: "translateZ(25px)", transformStyle: "preserve-3d" }}
+        >
+          {/* Right Social Sidebar Dock (covering full photo tile height) */}
+          <div
+            style={{ transform: "translateZ(35px)" }}
+            className={`absolute -right-12 inset-y-0 h-full w-12 z-30 flex flex-col justify-evenly items-center py-2 px-1 rounded-3xl bg-[#0c0e14] border border-white/20 shadow-2xl transition-all duration-300 ease-out ${
+              activeMemberId === member._id
+                ? "opacity-100 translate-x-0 pointer-events-auto"
+                : "opacity-0 -translate-x-3 pointer-events-none"
+            } group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto hover:opacity-100 hover:pointer-events-auto hover:translate-x-0 before:absolute before:-left-8 before:inset-y-0 before:w-12 before:content-['']`}
+          >
+            {/* GitHub */}
+            <a
+              href={member.githubUrl || "https://github.com"}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${member.name}'s GitHub`}
+              title="GitHub Profile"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-black text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Github className="w-4 h-4" />
+            </a>
+
+            {/* LinkedIn */}
+            <a
+              href={member.linkedinUrl || "https://linkedin.com"}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${member.name}'s LinkedIn`}
+              title="LinkedIn Profile"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-[#0077b5] text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Linkedin className="w-4 h-4" />
+            </a>
+
+            {/* X / Twitter */}
+            <a
+              href={member.twitterUrl || "https://x.com"}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${member.name}'s X profile`}
+              title="X (Twitter) Profile"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-black text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+
+            {/* Email */}
+            <a
+              href={`mailto:${member.name.toLowerCase().replace(/\s+/g, '')}@gmail.com`}
+              aria-label={`Email ${member.name}`}
+              title="Send Email"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-[#EA4335] text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Mail className="w-4 h-4" />
+            </a>
+          </div>
+
+          <div className="relative w-full aspect-square">
+            <div
+              className={`relative w-full aspect-square ${primaryColors[colorIndex]} transition-all duration-300 group-hover:scale-[1.02]`}
+              style={{
+                WebkitMaskImage: `url(${masks[maskIndex].mask})`,
+                maskImage: `url(${masks[maskIndex].mask})`,
+                WebkitMaskSize: "100%",
+                maskSize: "100%",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+              }}
+            >
+              <Image
+                src={member.photoUrl}
+                alt={member.name}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 220px"
+                className="object-cover md:grayscale-[90%] md:group-hover:grayscale-0 transition-all duration-300"
+              />
+            </div>
+
+            <svg
+              className="absolute inset-0 w-full h-full text-black dark:text-white pointer-events-none z-10"
+              viewBox="0 0 400 400"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d={masks[maskIndex].strokePath}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* Top Pill: Role (Floating in 3D parallax depth) */}
+      <div
+        style={{ transform: "translateZ(45px)" }}
+        className={`z-5 w-full ${primaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-2 px-4 shadow-sm`}
+      >
+        <p className="text-center text-sm font-semibold text-black truncate">
+          {member.role}
+        </p>
+      </div>
+
+      {/* Bottom Pill: Name (Floating higher in 3D parallax depth) */}
+      <div
+        style={{ transform: "translateZ(65px)" }}
+        className={`transform -translate-y-[2px] w-full ${secondaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-3 px-4 shadow-sm`}
+      >
+        <p className="text-center text-base sm:text-lg font-bold text-black truncate">
+          {member.name}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 // Main Component
 const Team: React.FC<TeamProps> = ({ teamData }) => {
   const [selectedDomain, setSelectedDomain] = useState<string>("all");
@@ -217,140 +404,15 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
       : activeDomains.filter((d) => d === selectedDomain);
 
   const renderMemberCard = (member: Member, index: number) => {
-    const colorIndex = index % 4;
-    const maskIndex = memberMasks[member._id] ?? (index % masks.length);
-
     return (
-      <div
+      <TiltMemberCard
         key={member._id}
-        onClick={() =>
-          setActiveMemberId((prev) =>
-            prev === member._id ? null : member._id
-          )
-        }
-        className="group relative w-full max-w-[80%] sm:max-w-[220px] mx-auto select-none z-10 hover:z-30 transition-all cursor-pointer"
-      >
-        {member.photoUrl && (
-          <div className="mb-4 relative">
-            {/* Right Social Sidebar Dock (covering full photo tile height) */}
-            <div
-              className={`absolute -right-12 inset-y-0 h-full w-12 z-30 flex flex-col justify-evenly items-center py-2 px-1 rounded-3xl bg-[#0c0e14] border border-white/20 shadow-2xl transition-all duration-300 ease-out ${
-                activeMemberId === member._id
-                  ? "opacity-100 translate-x-0 pointer-events-auto"
-                  : "opacity-0 -translate-x-3 pointer-events-none"
-              } group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto hover:opacity-100 hover:pointer-events-auto hover:translate-x-0 before:absolute before:-left-8 before:inset-y-0 before:w-12 before:content-['']`}
-            >
-              {/* GitHub */}
-              <a
-                href={member.githubUrl || "https://github.com"}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${member.name}'s GitHub`}
-                title="GitHub Profile"
-                className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-black text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Github className="w-4 h-4" />
-              </a>
-
-              {/* LinkedIn */}
-              <a
-                href={member.linkedinUrl || "https://linkedin.com"}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${member.name}'s LinkedIn`}
-                title="LinkedIn Profile"
-                className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-[#0077b5] text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-
-              {/* X / Twitter */}
-              <a
-                href={member.twitterUrl || "https://x.com"}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${member.name}'s X profile`}
-                title="X (Twitter) Profile"
-                className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-black text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
-
-              {/* Email */}
-              <a
-                href={`mailto:${member.name.toLowerCase().replace(/\s+/g, '')}@gmail.com`}
-                aria-label={`Email ${member.name}`}
-                title="Send Email"
-                className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-[#EA4335] text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Mail className="w-4 h-4" />
-              </a>
-            </div>
-
-            <div className="relative w-full aspect-square">
-              <div
-                className={`relative w-full aspect-square ${primaryColors[colorIndex]} transition-all duration-300 group-hover:scale-[1.02]`}
-                style={{
-                  WebkitMaskImage: `url(${masks[maskIndex].mask})`,
-                  maskImage: `url(${masks[maskIndex].mask})`,
-                  WebkitMaskSize: "100%",
-                  maskSize: "100%",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskPosition: "center",
-                  maskPosition: "center",
-                }}
-              >
-                <Image
-                  src={member.photoUrl}
-                  alt={member.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 220px"
-                  className="object-cover md:grayscale-[90%] md:group-hover:grayscale-0 transition-all duration-300"
-                />
-              </div>
-
-              <svg
-                className="absolute inset-0 w-full h-full text-black dark:text-white pointer-events-none z-10"
-                viewBox="0 0 400 400"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d={masks[maskIndex].strokePath}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-              </svg>
-            </div>
-          </div>
-        )}
-
-        {/* Top Pill: Role */}
-        <div
-          className={`z-5 w-full ${primaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-2 px-4 shadow-sm`}
-        >
-          <p className="text-center text-sm font-semibold text-black truncate">
-            {member.role}
-          </p>
-        </div>
-
-        {/* Bottom Pill: Name */}
-        <div
-          className={`transform -translate-y-[2px] w-full ${secondaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-3 px-4 shadow-sm`}
-        >
-          <p className="text-center text-base sm:text-lg font-bold text-black truncate">
-            {member.name}
-          </p>
-        </div>
-      </div>
+        member={member}
+        index={index}
+        activeMemberId={activeMemberId}
+        setActiveMemberId={setActiveMemberId}
+        memberMasks={memberMasks}
+      />
     );
   };
 
