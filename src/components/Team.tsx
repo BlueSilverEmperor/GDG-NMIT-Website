@@ -420,8 +420,8 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotX = -((mouseY - centerY) / centerY) * 12;
-    const rotY = ((mouseX - centerX) / centerX) * 12;
+    const rotX = -((mouseY - centerY) / centerY) * 8;
+    const rotY = ((mouseX - centerX) / centerX) * 8;
 
     setTilt({ x: rotX, y: rotY });
     setGlare({
@@ -514,8 +514,8 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
         <div
           className="pointer-events-none absolute inset-0 rounded-[36px] transition-opacity duration-300"
           style={{
-            opacity: isCardHovered ? 0.35 : 0,
-            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.08) 45%, transparent 70%)`,
+            opacity: isCardHovered ? 0.18 : 0,
+            background: `radial-gradient(circle 90px at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.05) 50%, transparent 100%)`,
             zIndex: 40,
           }}
         />
