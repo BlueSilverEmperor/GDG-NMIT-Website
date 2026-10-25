@@ -18,11 +18,13 @@ const Contact = () => {
     setMessage(null);
 
     const form = e.currentTarget;
+    const formElements = new FormData(form);
     const formData = {
-      name: (form[0] as HTMLInputElement).value,
-      email: (form[1] as HTMLInputElement).value,
-      phone: (form[2] as HTMLInputElement).value,
-      message: (form[3] as HTMLTextAreaElement).value,
+      name: ((formElements.get("name") as string) || "").trim(),
+      email: ((formElements.get("email") as string) || "").trim(),
+      phone: ((formElements.get("phone") as string) || "").trim(),
+      message: ((formElements.get("message") as string) || "").trim(),
+      _citadel_trap: ((formElements.get("_citadel_trap") as string) || "").trim(),
     };
 
     if (!validatePhone(formData.phone)) {
@@ -45,7 +47,7 @@ const Contact = () => {
       } else {
         setMessage("Failed to send the message. Please try again.");
       }
-    } catch (error) {
+    } catch {
       setMessage("An error occurred. Please try again.");
     }
     setLoading(false);
@@ -65,9 +67,21 @@ const Contact = () => {
               </div>
 
               <form className="space-y-4 mt-6" onSubmit={handleSubmit}>
+                {/* Citadel Deception Canary Honeypot - hidden from real humans, traps automated form spammers */}
+                <input
+                  type="text"
+                  name="_citadel_trap"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden opacity-0 pointer-events-none absolute -left-[9999px]"
+                  style={{ display: "none" }}
+                />
+
                 <div className="group">
                   <input
                     type="text"
+                    name="name"
                     placeholder="Name"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300"
                     required
@@ -77,6 +91,7 @@ const Contact = () => {
                 <div className="group">
                   <input
                     type="email"
+                    name="email"
                     placeholder="Email"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300"
                     required
@@ -86,6 +101,7 @@ const Contact = () => {
                 <div className="group">
                   <input
                     type="tel"
+                    name="phone"
                     placeholder="Phone"
                     className={`w-full px-4 py-3 rounded-xl border ${
                       phoneError ? "border-red-500" : "border-gray-200"
@@ -99,6 +115,7 @@ const Contact = () => {
                 <div className="group">
                   <textarea
                     rows={4}
+                    name="message"
                     placeholder="Message"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300 resize-none"
                     required

@@ -360,7 +360,7 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
     Object.entries(teamData.members).forEach(([domain, tiers]) => {
       const domainMembers: Member[] = [];
 
-      Object.entries(tiers).forEach(([_tierName, tierMembers]) => {
+      Object.values(tiers).forEach((tierMembers) => {
         const extractedMembers = extractMembersFromTier(tierMembers);
         domainMembers.push(...extractedMembers);
       });
