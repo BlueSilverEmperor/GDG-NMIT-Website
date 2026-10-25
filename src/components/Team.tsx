@@ -287,31 +287,31 @@ const GDGPictureFrame: React.FC<GDGPictureFrameProps> = ({
           </filter>
         </defs>
 
-        {/* --- Top-Left Organic Sector / Tab (Compact Size) --- */}
+        {/* --- Top-Left Organic Sector / Tab (Balanced Medium Size) --- */}
         <path
-          d="M 75 8 A 95.5 95.5 0 0 0 13 60 L 46 60 Q 55 60 55 51 L 55 17 Q 55 9 75 8 Z"
+          d="M 79 7.2 A 95.5 95.5 0 0 0 10.5 67 L 53 67 Q 63 67 63 57 L 63 17 Q 63 8.5 79 7.2 Z"
           fill={palette.frameTopLeft}
           stroke="#000000"
           strokeWidth="2.5"
           strokeLinejoin="round"
         />
 
-        {/* Globe Icon inside Top-Left Sector (Scaled down proportionally) */}
-        <g transform="translate(35, 35)">
+        {/* Globe Icon inside Top-Left Sector */}
+        <g transform="translate(38, 38)">
           {/* Globe Outline */}
-          <circle cx="0" cy="0" r="8.5" fill="none" stroke="#000000" strokeWidth="1.6" />
+          <circle cx="0" cy="0" r="9.5" fill="none" stroke="#000000" strokeWidth="1.7" />
           {/* Equator */}
-          <line x1="-8.5" y1="0" x2="8.5" y2="0" stroke="#000000" strokeWidth="1.6" />
+          <line x1="-9.5" y1="0" x2="9.5" y2="0" stroke="#000000" strokeWidth="1.7" />
           {/* Meridian / Longitude */}
-          <ellipse cx="0" cy="0" rx="4.2" ry="8.5" fill="none" stroke="#000000" strokeWidth="1.6" />
+          <ellipse cx="0" cy="0" rx="4.8" ry="9.5" fill="none" stroke="#000000" strokeWidth="1.7" />
           {/* Latitude Arcs */}
-          <path d="M -7 -3.5 Q 0 -1.5 7 -3.5" fill="none" stroke="#000000" strokeWidth="1.4" />
-          <path d="M -7 3.5 Q 0 1.5 7 3.5" fill="none" stroke="#000000" strokeWidth="1.4" />
+          <path d="M -7.6 -4 Q 0 -1.8 7.6 -4" fill="none" stroke="#000000" strokeWidth="1.5" />
+          <path d="M -7.6 4 Q 0 1.8 7.6 4" fill="none" stroke="#000000" strokeWidth="1.5" />
         </g>
 
         {/* --- White Comma / Droplet Accent at Top-Right of Sector --- */}
         <path
-          d="M 83 9 C 86.5 9 89 11.2 89 14.2 C 89 17 87.8 19 85.8 20.2 L 85.2 21.2 C 84 23.8 81.5 26 79.2 27.8 C 80.5 25.2 81.2 23 81.5 20.8 C 79.5 19.8 78 17.5 78 14.2 C 78 11.2 80 9 83 9 Z"
+          d="M 87 8 C 90.5 8 93 10.5 93 13.8 C 93 16.8 91.5 19 89.5 20.2 L 88.8 21.2 C 87.5 24 85 26.5 82.5 28.5 C 84 25.8 84.8 23.2 85 21 C 83 19.8 81.5 17.5 81.5 13.8 C 81.5 10.5 83.8 8 87 8 Z"
           fill="#FFFFFF"
           stroke="#000000"
           strokeWidth="2.2"
