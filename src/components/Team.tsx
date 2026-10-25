@@ -24,6 +24,10 @@ interface Palette {
   sectorHover: string;
   hex: string;
   badgeBg: string;
+  // Picture frame tokens matching design specification
+  frameTopLeft: string;
+  framePastelWave: string;
+  frameBeads: string;
 }
 
 const colorPalettes: Record<string, Palette> = {
@@ -40,6 +44,9 @@ const colorPalettes: Record<string, Palette> = {
     sectorHover: "#FF6600",
     hex: "#4285F4",
     badgeBg: "bg-[#4285F4]/15",
+    frameTopLeft: "#55BCF6",
+    framePastelWave: "#BAE6FD",
+    frameBeads: "#2563EB",
   },
   coral: {
     id: "coral",
@@ -54,6 +61,9 @@ const colorPalettes: Record<string, Palette> = {
     sectorHover: "#FF6600",
     hex: "#EA4335",
     badgeBg: "bg-[#EA4335]/15",
+    frameTopLeft: "#F77B96",
+    framePastelWave: "#FDD1D9",
+    frameBeads: "#EA4335",
   },
   yellow: {
     id: "yellow",
@@ -68,6 +78,9 @@ const colorPalettes: Record<string, Palette> = {
     sectorHover: "#FF6600",
     hex: "#FBBC04",
     badgeBg: "bg-[#FBBC04]/15",
+    frameTopLeft: "#F9D038",
+    framePastelWave: "#FEF08A",
+    frameBeads: "#F59E0B",
   },
   green: {
     id: "green",
@@ -82,6 +95,9 @@ const colorPalettes: Record<string, Palette> = {
     sectorHover: "#FF6600",
     hex: "#34A853",
     badgeBg: "bg-[#34A853]/15",
+    frameTopLeft: "#61D278",
+    framePastelWave: "#BBF7D0",
+    frameBeads: "#16A34A",
   },
 };
 
@@ -225,6 +241,165 @@ function describeAnnularSector(
     "Z",
   ].join(" ");
 }
+
+// -------------------------------------------------------------
+// GDG Custom Picture Frame (Duplicating the Reference Design)
+// -------------------------------------------------------------
+interface GDGPictureFrameProps {
+  photoUrl?: string;
+  name: string;
+  palette: Palette;
+  isHovered: boolean;
+}
+
+const GDGPictureFrame: React.FC<GDGPictureFrameProps> = ({
+  photoUrl,
+  name,
+  palette,
+  isHovered,
+}) => {
+  return (
+    <div
+      style={{ transform: "translateZ(30px)" }}
+      className={`relative w-[196px] h-[196px] transition-transform duration-300 select-none z-10 ${
+        isHovered ? "scale-[1.02]" : "scale-100"
+      }`}
+    >
+      {/* 1. Underlying Circular Photo with Next.js Image */}
+      <div className="absolute inset-0 rounded-full overflow-hidden border-[2.5px] border-black bg-neutral-900 shadow-lg">
+        <Image
+          src={photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
+          alt={name}
+          fill
+          sizes="220px"
+          className="object-cover group-hover/tilt:scale-105 transition-all duration-300"
+        />
+      </div>
+
+      {/* 2. Vector Frame Graphics Layer */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible"
+        viewBox="0 0 200 200"
+      >
+        <defs>
+          <filter id={`frame-shadow-${palette.id}`} x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#000000" floodOpacity="0.35" />
+          </filter>
+        </defs>
+
+        {/* --- Top-Left Organic Sector / Tab --- */}
+        <path
+          d="M 83 6.5 A 95.5 95.5 0 0 0 7.5 75.5 L 63 75.5 Q 73 75.5 73 65.5 L 73 17 Q 73 8 83 6.5 Z"
+          fill={palette.frameTopLeft}
+          stroke="#000000"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+
+        {/* Globe Icon inside Top-Left Sector */}
+        <g transform="translate(42, 42)">
+          {/* Globe Outline */}
+          <circle cx="0" cy="0" r="11" fill="none" stroke="#000000" strokeWidth="1.8" />
+          {/* Equator */}
+          <line x1="-11" y1="0" x2="11" y2="0" stroke="#000000" strokeWidth="1.8" />
+          {/* Meridian / Longitude */}
+          <ellipse cx="0" cy="0" rx="5.5" ry="11" fill="none" stroke="#000000" strokeWidth="1.8" />
+          {/* Latitude Arcs */}
+          <path d="M -8.5 -5 Q 0 -2 8.5 -5" fill="none" stroke="#000000" strokeWidth="1.6" />
+          <path d="M -8.5 5 Q 0 2 8.5 5" fill="none" stroke="#000000" strokeWidth="1.6" />
+        </g>
+
+        {/* --- White Comma / Droplet Accent at Top-Right of Sector --- */}
+        <path
+          d="M 91 7.5 C 94.8 7.5 97.5 10 97.5 13.5 C 97.5 16.8 96 19 93.8 20.5 L 93.2 21.5 C 91.8 24.5 89 27 86.5 29 C 88 26 88.8 23.5 89 21 C 86.8 19.8 85 17.2 85 13.5 C 85 10 87.5 7.5 91 7.5 Z"
+          fill="#FFFFFF"
+          stroke="#000000"
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+        />
+
+        {/* --- Bottom-Right Organic Pastel Wave --- */}
+        <path
+          d="M 191 138 C 172 135 158 144 151 159 C 145 173 130 187 110 195.5 A 95.5 95.5 0 0 0 191 138 Z"
+          fill={palette.framePastelWave}
+          stroke="#000000"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+
+        {/* --- Outer Circular Rim Stroke (ties everything seamlessly to circular photo) --- */}
+        <circle
+          cx="100"
+          cy="100"
+          r="95.5"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="2.5"
+        />
+
+        {/* --- Right-Edge Stacked Accent Beads --- */}
+        {/* Top Bead */}
+        <circle
+          cx="190.5"
+          cy="88"
+          r="8.5"
+          fill={palette.frameBeads}
+          stroke="#000000"
+          strokeWidth="2.5"
+        />
+        {/* Bottom Bead */}
+        <circle
+          cx="190.5"
+          cy="105"
+          r="8.5"
+          fill={palette.frameBeads}
+          stroke="#000000"
+          strokeWidth="2.5"
+        />
+
+        {/* --- Floating Google Developer (< / >) Pill Badge --- */}
+        <g transform="translate(114, 137)" filter={`url(#frame-shadow-${palette.id})`}>
+          {/* Pill Capsule Background */}
+          <rect
+            x="0"
+            y="0"
+            width="52"
+            height="27"
+            rx="13.5"
+            ry="13.5"
+            fill="#FFFFFF"
+            stroke="#000000"
+            strokeWidth="2.3"
+          />
+
+          {/* Left Bracket < (Google Blue) */}
+          <path
+            d="M 12.5 13.5 L 17.5 9 L 19 10.5 L 15.5 13.5 L 19 16.5 L 17.5 18 Z"
+            fill="#4285F4"
+          />
+
+          {/* Slash / Top Half (Google Red) */}
+          <polygon
+            points="27.5,7.5 25,13.5 22.8,13.5 25.3,7.5"
+            fill="#EA4335"
+          />
+
+          {/* Slash / Bottom Half (Google Yellow) */}
+          <polygon
+            points="25,13.5 22.5,19.5 20.3,19.5 22.8,13.5"
+            fill="#FBBC04"
+          />
+
+          {/* Right Bracket > (Google Green) */}
+          <path
+            d="M 39.5 13.5 L 34.5 9 L 33 10.5 L 36.5 13.5 L 33 16.5 L 34.5 18 Z"
+            fill="#34A853"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+};
 
 // -------------------------------------------------------------
 // Tilt Card with BeamNG 4-Quadrant Radial Menu
@@ -459,41 +634,13 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
             })}
           </div>
 
-          {/* Central Circular Avatar */}
-          <div
-            style={{ transform: "translateZ(30px)" }}
-            className={`relative w-[190px] h-[190px] rounded-full overflow-hidden border-[3px] border-black bg-neutral-900 shadow-inner z-10 transition-transform duration-300 ${
-              isCardHovered ? "scale-[1.02]" : "scale-100"
-            }`}
-          >
-            <Image
-              src={member.photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
-              alt={member.name}
-              fill
-              sizes="220px"
-              className="object-cover md:grayscale group-hover/tilt:grayscale-0 transition-all duration-300"
-            />
-          </div>
-
-          {/* Google Code Badge (< / >) */}
-          <div
-            style={{ transform: "translateZ(48px)" }}
-            className="absolute bottom-3 right-5 z-30 flex items-center justify-center bg-white border-[2.5px] border-black rounded-full px-2.5 py-0.5 shadow-md font-mono font-black text-xs pointer-events-none select-none"
-          >
-            <span className="text-[#4285F4]">&lt;</span>
-            <span className="text-[#EA4335]">/</span>
-            <span className="text-[#34A853]">&gt;</span>
-          </div>
-
-          {/* Accent Beads on the Right Edge (Matching UI specification) */}
-          <div className="absolute right-0.5 top-1/2 -translate-y-1/2 flex flex-col gap-1.5 pointer-events-none z-20">
-            <span
-              className={`w-3.5 h-3.5 rounded-full ${palette.dotColor} border-[2px] border-black shadow-sm`}
-            />
-            <span
-              className={`w-3.5 h-3.5 rounded-full ${palette.dotColor} border-[2px] border-black shadow-sm`}
-            />
-          </div>
+          {/* Central Circular Avatar with GDG Picture Frame */}
+          <GDGPictureFrame
+            photoUrl={member.photoUrl}
+            name={member.name}
+            palette={palette}
+            isHovered={isCardHovered}
+          />
         </div>
 
         {/* ---------------- STATUS / QUADRANT CODE TEXT ---------------- */}
