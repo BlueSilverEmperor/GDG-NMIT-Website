@@ -215,7 +215,7 @@ const TiltMemberCard: React.FC<TiltMemberCardProps> = ({
           {/* Right Social Sidebar Dock (covering full photo tile height) */}
           <div
             style={{ transform: "translateZ(35px)" }}
-            className={`absolute -right-12 inset-y-0 h-full w-12 z-30 flex flex-col justify-evenly items-center py-2 px-1 rounded-3xl bg-[#0c0e14] border border-white/20 shadow-2xl transition-all duration-300 ease-out ${
+            className={`absolute -right-12 inset-y-0 h-full w-12 z-30 flex flex-col justify-evenly items-center py-2 px-1 rounded-3xl ${primaryColors[colorIndex]} border-3 border-black dark:border-white shadow-2xl transition-all duration-300 ease-out ${
               activeMemberId === member._id
                 ? "opacity-100 translate-x-0 pointer-events-auto"
                 : "opacity-0 -translate-x-3 pointer-events-none"
@@ -228,7 +228,7 @@ const TiltMemberCard: React.FC<TiltMemberCardProps> = ({
               rel="noopener noreferrer"
               aria-label={`${member.name}'s GitHub`}
               title="GitHub Profile"
-              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-black text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-black text-white hover:bg-neutral-800 flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-black/20 cursor-pointer shadow-sm"
               onClick={(e) => e.stopPropagation()}
             >
               <Github className="w-4 h-4" />
@@ -241,7 +241,7 @@ const TiltMemberCard: React.FC<TiltMemberCardProps> = ({
               rel="noopener noreferrer"
               aria-label={`${member.name}'s LinkedIn`}
               title="LinkedIn Profile"
-              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-[#0077b5] text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-black text-white hover:bg-[#0077b5] flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-black/20 cursor-pointer shadow-sm"
               onClick={(e) => e.stopPropagation()}
             >
               <Linkedin className="w-4 h-4" />
@@ -254,7 +254,7 @@ const TiltMemberCard: React.FC<TiltMemberCardProps> = ({
               rel="noopener noreferrer"
               aria-label={`${member.name}'s X profile`}
               title="X (Twitter) Profile"
-              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-black text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-black text-white hover:bg-neutral-800 flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-black/20 cursor-pointer shadow-sm"
               onClick={(e) => e.stopPropagation()}
             >
               <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -267,7 +267,7 @@ const TiltMemberCard: React.FC<TiltMemberCardProps> = ({
               href={`mailto:${member.name.toLowerCase().replace(/\s+/g, '')}@gmail.com`}
               aria-label={`Email ${member.name}`}
               title="Send Email"
-              className="relative z-10 w-9 h-9 rounded-2xl bg-neutral-800/80 hover:bg-[#EA4335] text-white flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-white/5 cursor-pointer"
+              className="relative z-10 w-9 h-9 rounded-2xl bg-black text-white hover:bg-[#EA4335] flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 border border-black/20 cursor-pointer shadow-sm"
               onClick={(e) => e.stopPropagation()}
             >
               <Mail className="w-4 h-4" />
