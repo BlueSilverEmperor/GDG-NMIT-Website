@@ -1,7 +1,7 @@
 "use client";
-import React, { useMemo, useState, useRef } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { Github, Linkedin, Mail, ChevronDown } from "lucide-react";
+import { Github, Linkedin, Mail, ChevronDown, Sun, Moon } from "lucide-react";
 import type { Member, TeamData, TierMembers, MemberTierGroup } from "@/types/team";
 
 interface TeamProps {
@@ -499,7 +499,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className={`relative z-10 w-full rounded-[38px] bg-[#0E1015] border-[3.5px] ${palette.borderColor} p-6 pb-7 flex flex-col items-center justify-between shadow-2xl transition-all select-none overflow-hidden`}
+        className={`relative z-10 w-full rounded-[38px] bg-white dark:bg-[#0E1015] border-[3.5px] ${palette.borderColor} p-6 pb-7 flex flex-col items-center justify-between shadow-xl dark:shadow-2xl transition-all select-none overflow-hidden`}
         style={{
           transformStyle: "preserve-3d",
           transform: isCardHovered
@@ -515,7 +515,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
           className="pointer-events-none absolute inset-0 rounded-[36px] transition-opacity duration-300"
           style={{
             opacity: isCardHovered ? 0.35 : 0,
-            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 45%, transparent 70%)`,
+            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.08) 45%, transparent 70%)`,
             zIndex: 40,
           }}
         />
@@ -529,16 +529,16 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
             <span
               className={`w-2.5 h-2.5 rounded-full ${palette.dotColor} shadow-sm animate-pulse`}
             />
-            <span className="text-[11px] font-black tracking-widest text-white uppercase font-sans">
+            <span className="text-[11px] font-black tracking-widest text-gray-900 dark:text-white uppercase font-sans">
               {domainNames[domain] ?? domain}
             </span>
           </div>
-          <span className="text-[10px] font-mono tracking-wider text-gray-400 font-semibold">
+          <span className="text-[10px] font-mono tracking-wider text-gray-500 dark:text-gray-400 font-semibold">
             GDG NMIT
           </span>
         </div>
 
-        <div className="w-full h-[1px] bg-white/10 mb-4" />
+        <div className="w-full h-[1px] bg-gray-200 dark:bg-white/10 mb-4" />
 
         {/* ---------------- CENTER STAGE: AVATAR & RADIAL MENU ---------------- */}
         <div className="relative w-[260px] h-[260px] flex items-center justify-center my-2">
@@ -647,7 +647,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
               {quadrants.find((q) => q.id === activeQuadrant)?.label}
             </span>
           ) : (
-            <span className="text-[11px] font-mono tracking-widest text-gray-500 uppercase transition-opacity duration-300">
+            <span className="text-[11px] font-mono tracking-widest text-gray-500 dark:text-gray-400 uppercase transition-opacity duration-300">
               {isMenuOpen ? "Select Profile" : "Hover To Connect"}
             </span>
           )}
@@ -658,7 +658,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
           {/* Top Pill: Role */}
           <div
             style={{ transform: "translateZ(32px)" }}
-            className={`w-full ${palette.primaryBg} rounded-full border-[3px] border-white py-2.5 px-4 shadow-md flex items-center justify-center`}
+            className={`w-full ${palette.primaryBg} rounded-full border-[2.5px] border-black/80 dark:border-white py-2.5 px-4 shadow-md flex items-center justify-center`}
           >
             <p className="text-center text-xs sm:text-sm font-black text-black uppercase tracking-wide truncate">
               {member.role}
@@ -668,7 +668,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
           {/* Bottom Pill: Name */}
           <div
             style={{ transform: "translateZ(38px)" }}
-            className={`w-full ${palette.secondaryBg} rounded-full border-[3px] border-white py-3 px-4 shadow-md flex items-center justify-center mt-2.5`}
+            className={`w-full ${palette.secondaryBg} rounded-full border-[2.5px] border-black/80 dark:border-white py-3 px-4 shadow-md flex items-center justify-center mt-2.5`}
           >
             <p className="text-center text-base sm:text-lg font-black text-black tracking-normal truncate">
               {member.name}
@@ -686,6 +686,36 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
 const Team: React.FC<TeamProps> = ({ teamData }) => {
   const [selectedDomain, setSelectedDomain] = useState<string>("all");
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+
+  // Initialize theme from system or class
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isDark =
+        document.documentElement.classList.contains("dark") ||
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setIsDarkMode(isDark);
+      if (isDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        if (next) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+      return next;
+    });
+  };
 
   const toggleDomainDropdown = (domain: string) => {
     setExpandedDomains((prev) => ({
@@ -717,8 +747,8 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
 
   if (!teamData) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-gray-400 font-mono">No team data available</p>
+      <div className="min-h-screen bg-[#F8F9FA] dark:bg-black flex items-center justify-center">
+        <p className="text-gray-600 dark:text-gray-400 font-mono">No team data available</p>
       </div>
     );
   }
@@ -736,14 +766,35 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#08090C] text-white pt-20 pb-28">
+    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#08090C] text-gray-900 dark:text-white pt-24 pb-28 transition-colors duration-300">
       <div className="px-6 max-w-7xl mx-auto">
-        {/* Header Title Section */}
-        <div className="mb-12 text-center sm:text-left">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
-            Meet Our Team
-          </h1>
-          <div className="h-1.5 w-24 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-3" />
+        {/* Header Title Section & Theme Toggle */}
+        <div className="mb-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white tracking-tight">
+              Meet Our Team
+            </h1>
+            <div className="h-1.5 w-24 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-3" />
+          </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            className="self-start sm:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-mono font-bold transition-all border-2 bg-white dark:bg-[#12141A] text-gray-800 dark:text-gray-200 border-gray-300 dark:border-white/20 hover:border-gray-900 dark:hover:border-white cursor-pointer shadow-sm hover:shadow"
+          >
+            {isDarkMode ? (
+              <>
+                <Sun className="w-4 h-4 text-[#FBBC04]" />
+                <span>Light Mode</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-4 h-4 text-[#4285F4]" />
+                <span>Dark Mode</span>
+              </>
+            )}
+          </button>
         </div>
 
         {/* ---------------- DOMAIN FILTER PILLS ---------------- */}
@@ -755,8 +806,8 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
                 onClick={() => setSelectedDomain(d)}
                 className={`px-4 py-2 rounded-full text-xs font-mono font-bold border-2 transition-all cursor-pointer ${
                   selectedDomain === d
-                    ? "bg-[#4285F4] text-white border-white shadow-lg -translate-y-0.5"
-                    : "bg-[#12141A] text-gray-400 border-white/10 hover:text-white hover:border-white/30"
+                    ? "bg-[#4285F4] text-white border-[#4285F4] shadow-md -translate-y-0.5"
+                    : "bg-white dark:bg-[#12141A] text-gray-700 dark:text-gray-400 border-gray-200 dark:border-white/10 hover:text-black dark:hover:text-white hover:border-gray-400 dark:hover:border-white/30 shadow-sm"
                 }`}
               >
                 {d === "all" ? "All Domains" : domainNames[d] ?? d}
@@ -776,9 +827,9 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
           return (
             <div key={domain} className="mb-20">
               {/* Domain Header & Dropdown Toggle */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10 gap-4 border-b border-white/10 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10 gap-4 border-b border-gray-200 dark:border-white/10 pb-4">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-white capitalize">
+                  <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white capitalize">
                     {domainNames[domain] ?? domain}
                   </h2>
                   <div className="h-1 w-20 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-2.5" />
@@ -788,7 +839,7 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
                 {otherMembers.length > 0 && (
                   <button
                     onClick={() => toggleDomainDropdown(domain)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-mono font-bold bg-[#14161E] border-2 border-white/20 text-gray-200 hover:border-white hover:text-white transition-all cursor-pointer shadow-md"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-mono font-bold bg-white dark:bg-[#14161E] border-2 border-gray-300 dark:border-white/20 text-gray-800 dark:text-gray-200 hover:border-gray-900 dark:hover:border-white hover:text-black dark:hover:text-white transition-all cursor-pointer shadow-sm"
                   >
                     <span>
                       {isExpanded
@@ -818,17 +869,17 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
 
               {/* Extended Members Dropdown Content */}
               {otherMembers.length > 0 && isExpanded && (
-                <div className="mt-14 pt-8 border-t-2 border-dashed border-white/15 transition-all duration-300">
+                <div className="mt-14 pt-8 border-t-2 border-dashed border-gray-300 dark:border-white/15 transition-all duration-300">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-[#4285F4] animate-ping" />
-                      <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-gray-300">
+                      <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-gray-700 dark:text-gray-300">
                         {domainNames[domain] ?? domain} &bull; Extended Team ({otherMembers.length})
                       </h3>
                     </div>
                     <button
                       onClick={() => toggleDomainDropdown(domain)}
-                      className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-gray-400 hover:text-white cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white cursor-pointer"
                     >
                       <span>Collapse</span>
                       <ChevronDown className="w-3.5 h-3.5 rotate-180" />
