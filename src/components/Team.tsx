@@ -1,7 +1,7 @@
 "use client";
-import React, { useMemo, useState, useRef, useEffect } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import Image from "next/image";
-import { Github, Linkedin, Mail, ChevronDown, Sun, Moon } from "lucide-react";
+import { Github, Linkedin, Mail, ChevronDown } from "lucide-react";
 import type { Member, TeamData, TierMembers, MemberTierGroup } from "@/types/team";
 
 interface TeamProps {
@@ -686,36 +686,6 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
 const Team: React.FC<TeamProps> = ({ teamData }) => {
   const [selectedDomain, setSelectedDomain] = useState<string>("all");
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
-
-  // Initialize theme from system or class
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isDark =
-        document.documentElement.classList.contains("dark") ||
-        window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setIsDarkMode(isDark);
-      if (isDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => {
-      const next = !prev;
-      if (typeof window !== "undefined") {
-        if (next) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      }
-      return next;
-    });
-  };
 
   const toggleDomainDropdown = (domain: string) => {
     setExpandedDomains((prev) => ({
@@ -768,33 +738,12 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#08090C] text-gray-900 dark:text-white pt-24 pb-28 transition-colors duration-300">
       <div className="px-6 max-w-7xl mx-auto">
-        {/* Header Title Section & Theme Toggle */}
-        <div className="mb-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white tracking-tight">
-              Meet Our Team
-            </h1>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-3" />
-          </div>
-
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            className="self-start sm:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-mono font-bold transition-all border-2 bg-white dark:bg-[#12141A] text-gray-800 dark:text-gray-200 border-gray-300 dark:border-white/20 hover:border-gray-900 dark:hover:border-white cursor-pointer shadow-sm hover:shadow"
-          >
-            {isDarkMode ? (
-              <>
-                <Sun className="w-4 h-4 text-[#FBBC04]" />
-                <span>Light Mode</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-4 h-4 text-[#4285F4]" />
-                <span>Dark Mode</span>
-              </>
-            )}
-          </button>
+        {/* Header Title Section */}
+        <div className="mb-12 text-center sm:text-left">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white tracking-tight">
+            Meet Our Team
+          </h1>
+          <div className="h-1.5 w-24 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-3" />
         </div>
 
         {/* ---------------- DOMAIN FILTER PILLS ---------------- */}
