@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState, useRef } from "react";
 import Image from "next/image";
-import { Github, Linkedin, Mail, ChevronDown, Eye, SlidersHorizontal, Sparkles } from "lucide-react";
+import { Github, Linkedin, Mail, ChevronDown, Eye, SlidersHorizontal, Sparkles, Globe } from "lucide-react";
 import type { Member, TeamData, TierMembers, MemberTierGroup } from "@/types/team";
 
 interface TeamProps {
@@ -227,7 +227,116 @@ function describeAnnularSector(
 }
 
 // -------------------------------------------------------------
-// Tilt Card with BeamNG 4-Quadrant Radial Menu
+// Authentic GDG Illustrated Avatar Pic Frame
+// (Top-left blue globe tab + semicolon, right stacked beads,
+//  bottom-right pastel wave, and GDG chevron logo badge)
+// -------------------------------------------------------------
+interface GDGAvatarPicFrameProps {
+  photoUrl: string;
+  name: string;
+  githubUrl?: string;
+  className?: string;
+}
+
+const GDGAvatarPicFrame: React.FC<GDGAvatarPicFrameProps> = ({
+  photoUrl,
+  name,
+  githubUrl,
+  className = "",
+}) => {
+  return (
+    <div className={`relative w-[210px] h-[210px] sm:w-[220px] sm:h-[220px] select-none ${className}`}>
+      {/* Base Circular Photo Container with Solid Black Border */}
+      <div className="relative w-full h-full rounded-full overflow-hidden border-[3.5px] border-black bg-neutral-900 shadow-xl">
+        <Image
+          src={photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
+          alt={name}
+          fill
+          sizes="240px"
+          className="object-cover object-center transition-transform duration-500 group-hover/tilt:scale-105"
+        />
+
+        {/* ---------------- OVERLAY GRAPHICS CLIPPED INSIDE CIRCLE ---------------- */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
+          viewBox="0 0 240 240"
+        >
+          {/* 1. Top-Left Blue Graphic Tab */}
+          <path
+            d="M 6 86 A 118 118 0 0 1 76 8 C 76 28, 68 56, 50 68 C 32 80, 16 82, 6 86 Z"
+            fill="#4BB3FD"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+
+          {/* 2. Semicolon Punctuation Mark at neck of Blue Tab */}
+          {/* Top cyan circle */}
+          <circle cx="84" cy="24" r="7.5" fill="#D2F3FE" stroke="#000000" strokeWidth="2.2" />
+          {/* Bottom black curved comma */}
+          <path
+            d="M 84 34 C 88 34, 91 38, 89 43 C 87 49, 81 57, 78 60 C 79 54, 82 48, 82 44 C 81 42, 81 36, 84 34 Z"
+            fill="#000000"
+          />
+
+          {/* 3. Right Stacked Blue Beads */}
+          <circle cx="212" cy="106" r="11" fill="#4285F4" stroke="#000000" strokeWidth="2.5" />
+          <circle cx="212" cy="128" r="11" fill="#3B78E7" stroke="#000000" strokeWidth="2.5" />
+
+          {/* 4. Bottom-Right Pastel Cyan Wave */}
+          <path
+            d="M 218 138 A 118 118 0 0 1 150 220 C 160 200, 180 185, 188 165 C 196 150, 208 142, 218 138 Z"
+            fill="#D4F4FD"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+        </svg>
+
+        {/* Top-Left Globe Line-Art Icon inside Blue Tab */}
+        <div
+          title="Developer Profile"
+          className="absolute top-7 left-6 z-20 pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-115 text-black"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (githubUrl) window.open(githubUrl, "_blank", "noopener,noreferrer");
+          }}
+        >
+          <Globe className="w-5 h-5 text-black stroke-[2.2]" />
+        </div>
+      </div>
+
+      {/* 5. Google Developer Logo Emblem Badge (Floating at bottom-right) */}
+      <div
+        style={{ transform: "translateZ(48px)" }}
+        className="absolute bottom-3 right-2 z-30 bg-[#F8F9FA] border-[2.5px] border-black rounded-full px-3 py-1.5 shadow-[2px_3px_0px_rgba(0,0,0,0.85)] flex items-center justify-center transform rotate-[-4deg] hover:rotate-0 hover:scale-105 transition-all duration-200 pointer-events-none select-none"
+      >
+        <svg width="34" height="20" viewBox="0 0 36 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Left Bracket < (Google Blue base + Red cap) */}
+          <path
+            d="M11 3.5L3.5 10L11 16.5"
+            stroke="#4285F4"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path d="M11 3.5L7.5 6.5" stroke="#EA4335" strokeWidth="4.5" strokeLinecap="round" />
+
+          {/* Right Bracket > (Google Green cap + Yellow base) */}
+          <path
+            d="M25 3.5L32.5 10L25 16.5"
+            stroke="#34A853"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path d="M28.5 13.5L25 16.5" stroke="#FBBC04" strokeWidth="4.5" strokeLinecap="round" />
+        </svg>
+      </div>
+    </div>
+  );
+};
+
+// -------------------------------------------------------------
+// Tilt Card with BeamNG 4-Quadrant Radial Menu & Avatar Frame
 // -------------------------------------------------------------
 interface TiltCardProps {
   member: Member;
@@ -280,7 +389,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 205,
       endAngle: 265,
       iconCenterAngle: 235,
-      iconRadius: 110,
+      iconRadius: 122,
       url: member.githubUrl || "https://github.com",
       Icon: Github,
     },
@@ -291,7 +400,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 295,
       endAngle: 355,
       iconCenterAngle: 325,
-      iconRadius: 110,
+      iconRadius: 122,
       url: member.linkedinUrl || "https://linkedin.com",
       Icon: Linkedin,
     },
@@ -302,7 +411,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 25,
       endAngle: 85,
       iconCenterAngle: 55,
-      iconRadius: 110,
+      iconRadius: 122,
       url: member.twitterUrl || "https://x.com",
       Icon: ({ className }: { className?: string }) => (
         <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -317,7 +426,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 115,
       endAngle: 175,
       iconCenterAngle: 145,
-      iconRadius: 110,
+      iconRadius: 122,
       url: `mailto:${member.name.toLowerCase().replace(/\s+/g, "")}@gmail.com`,
       Icon: Mail,
     },
@@ -377,17 +486,17 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
         <div className="w-full h-[1px] bg-white/10 mb-4" />
 
         {/* ---------------- CENTER STAGE: AVATAR & RADIAL MENU ---------------- */}
-        <div className="relative w-[260px] h-[260px] flex items-center justify-center my-2">
-          {/* SVG 4-Quadrant BeamNG Radial Menu */}
+        <div className="relative w-[270px] h-[270px] flex items-center justify-center my-1">
+          {/* SVG 4-Quadrant BeamNG Radial Menu (surrounding the avatar) */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible"
-            viewBox="0 0 260 260"
+            viewBox="0 0 270 270"
           >
             <defs>
-              <filter id="glow-orange" x="-50%" y="-50%" width="200%" height="200%">
+              <filter id={`glow-orange-${member._id}`} x="-50%" y="-50%" width="200%" height="200%">
                 <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#FF6600" floodOpacity="0.9" />
               </filter>
-              <filter id="glow-palette" x="-50%" y="-50%" width="200%" height="200%">
+              <filter id={`glow-palette-${member._id}`} x="-50%" y="-50%" width="200%" height="200%">
                 <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor={palette.hex} floodOpacity="0.6" />
               </filter>
             </defs>
@@ -395,10 +504,10 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
             {/* 4 Annular Radial Quadrants */}
             {quadrants.map((quad) => {
               const isQuadActive = activeQuadrant === quad.id;
-              // Animate inner & outer radius based on open/hover state
-              const rInner = 97;
-              const rOuter = isMenuOpen ? (isQuadActive ? 128 : 122) : 98;
-              const pathD = describeAnnularSector(130, 130, rInner, rOuter, quad.startAngle, quad.endAngle);
+              // Expand from inner avatar radius ~110 to outer radius ~138 on open/hover
+              const rInner = 110;
+              const rOuter = isMenuOpen ? (isQuadActive ? 140 : 134) : 111;
+              const pathD = describeAnnularSector(135, 135, rInner, rOuter, quad.startAngle, quad.endAngle);
 
               return (
                 <path
@@ -408,11 +517,17 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
                   stroke="#000000"
                   strokeWidth="2.5"
                   className="transition-all duration-300 ease-out cursor-pointer pointer-events-auto"
-                  filter={isQuadActive ? "url(#glow-orange)" : isMenuOpen ? "url(#glow-palette)" : undefined}
+                  filter={
+                    isQuadActive
+                      ? `url(#glow-orange-${member._id})`
+                      : isMenuOpen
+                      ? `url(#glow-palette-${member._id})`
+                      : undefined
+                  }
                   style={{
                     opacity: isMenuOpen ? (isQuadActive ? 1 : 0.88) : 0,
                     transform: isMenuOpen ? "scale(1)" : "scale(0.92)",
-                    transformOrigin: "130px 130px",
+                    transformOrigin: "135px 135px",
                   }}
                   onMouseEnter={() => setActiveQuadrant(quad.id)}
                   onMouseLeave={() => setActiveQuadrant(null)}
@@ -432,7 +547,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
           >
             {quadrants.map((quad) => {
               const isQuadActive = activeQuadrant === quad.id;
-              const coords = polarToCartesian(130, 130, quad.iconRadius, quad.iconCenterAngle);
+              const coords = polarToCartesian(135, 135, quad.iconRadius, quad.iconCenterAngle);
               const IconComp = quad.Icon;
 
               return (
@@ -464,39 +579,12 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
             })}
           </div>
 
-          {/* Central Circular Avatar */}
-          <div
-            style={{ transform: "translateZ(30px)" }}
-            className={`relative w-[190px] h-[190px] rounded-full overflow-hidden border-[3px] border-black bg-neutral-900 shadow-inner z-10 transition-transform duration-300 ${
-              isCardHovered ? "scale-[1.02]" : "scale-100"
-            }`}
-          >
-            <Image
-              src={member.photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
-              alt={member.name}
-              fill
-              sizes="220px"
-              className="object-cover md:grayscale group-hover/tilt:grayscale-0 transition-all duration-300"
-            />
-          </div>
-
-          {/* Google Code Badge (< / >) */}
-          <div
-            style={{ transform: "translateZ(48px)" }}
-            className="absolute bottom-3 right-5 z-30 flex items-center justify-center bg-white border-[2.5px] border-black rounded-full px-2.5 py-0.5 shadow-md font-mono font-black text-xs pointer-events-none select-none"
-          >
-            <span className="text-[#4285F4]">&lt;</span>
-            <span className="text-[#EA4335]">/</span>
-            <span className="text-[#34A853]">&gt;</span>
-          </div>
-
-          {/* Accent Beads on the Right Edge (Matching UI specification) */}
-          <div className="absolute right-0.5 top-1/2 -translate-y-1/2 flex flex-col gap-1.5 pointer-events-none z-20">
-            <span
-              className={`w-3.5 h-3.5 rounded-full ${palette.dotColor} border-[2px] border-black shadow-sm`}
-            />
-            <span
-              className={`w-3.5 h-3.5 rounded-full ${palette.dotColor} border-[2px] border-black shadow-sm`}
+          {/* Central Illustrated GDG Avatar Pic Frame (translateZ: 30px) */}
+          <div style={{ transform: "translateZ(30px)" }} className="relative z-10">
+            <GDGAvatarPicFrame
+              photoUrl={member.photoUrl}
+              name={member.name}
+              githubUrl={member.githubUrl}
             />
           </div>
         </div>
