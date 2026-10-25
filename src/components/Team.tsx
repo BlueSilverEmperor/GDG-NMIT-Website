@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState, useRef } from "react";
 import Image from "next/image";
-import { Github, Linkedin, Mail, ChevronDown, Eye, SlidersHorizontal, Sparkles, Globe } from "lucide-react";
+import { Github, Linkedin, Mail, ChevronDown, Eye, SlidersHorizontal, Sparkles } from "lucide-react";
 import type { Member, TeamData, TierMembers, MemberTierGroup } from "@/types/team";
 
 interface TeamProps {
@@ -228,26 +228,32 @@ function describeAnnularSector(
 
 // -------------------------------------------------------------
 // Authentic GDG Illustrated Avatar Pic Frame
-// (Top-left blue globe tab + semicolon, right stacked beads,
-//  bottom-right pastel wave, and GDG chevron logo badge)
+// Refined to match exact Google Developer reference asset:
+// 1. Smooth rounded rectangular top-left tab with generous 36px inner corner
+// 2. Centered crisp wireframe globe icon
+// 3. Top-left accent semicolon (pastel blue #CBEBF4 dot + smooth curved comma)
+// 4. Wide, soft organic pastel blue wave (#CBEBF4) cresting around 4 o'clock
+// 5. Dual stacked theme accent blue (#3B82F6) beads at 3 o'clock intersecting wave
+// 6. 64x32px stadium Google code pill (< >) with Blue <, Yellow/Green /, Red >
 // -------------------------------------------------------------
 interface GDGAvatarPicFrameProps {
   photoUrl: string;
   name: string;
-  githubUrl?: string;
+  wedgeColor?: string;
   className?: string;
 }
 
 const GDGAvatarPicFrame: React.FC<GDGAvatarPicFrameProps> = ({
   photoUrl,
   name,
-  githubUrl,
+  wedgeColor = "#4DBBFF",
   className = "",
 }) => {
   return (
     <div className={`relative w-[210px] h-[210px] sm:w-[220px] sm:h-[220px] select-none ${className}`}>
-      {/* Base Circular Photo Container with Solid Black Border */}
-      <div className="relative w-full h-full rounded-full overflow-hidden border-[3.5px] border-black bg-neutral-900 shadow-xl">
+      {/* ---------------- BASE CIRCULAR PHOTO & CLIPPED GEOMETRY ---------------- */}
+      <div className="relative w-full h-full rounded-full overflow-hidden border-[3.5px] border-[#111111] bg-neutral-900 shadow-xl">
+        {/* Member Photograph */}
         <Image
           src={photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
           alt={name}
@@ -256,79 +262,117 @@ const GDGAvatarPicFrame: React.FC<GDGAvatarPicFrameProps> = ({
           className="object-cover object-center transition-transform duration-500 group-hover/tilt:scale-105"
         />
 
-        {/* ---------------- OVERLAY GRAPHICS CLIPPED INSIDE CIRCLE ---------------- */}
+        {/* Clipped Decorative SVG Elements */}
         <svg
-          className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
+          className="absolute inset-0 w-full h-full pointer-events-none z-10"
           viewBox="0 0 240 240"
         >
-          {/* 1. Top-Left Blue Graphic Tab */}
+          {/* 1. TOP-LEFT WEDGE WITH GENEROUSE 36px INNER CORNER */}
           <path
-            d="M 6 86 A 118 118 0 0 1 76 8 C 76 28, 68 56, 50 68 C 32 80, 16 82, 6 86 Z"
-            fill="#4BB3FD"
-            stroke="#000000"
+            d="M 2.4 96 A 120 120 0 0 1 88 4.4 L 88 60 A 36 36 0 0 1 52 96 L 2.4 96 Z"
+            fill={wedgeColor}
+            stroke="#111111"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+
+          {/* Centered Crisp Wireframe Globe Icon Inside Top-Left Tab */}
+          <g transform="translate(44, 48)">
+            {/* Globe Outer Circle */}
+            <circle cx="0" cy="0" r="14" stroke="#111111" strokeWidth="2.2" fill="none" />
+            {/* Equator Line */}
+            <line x1="-14" y1="0" x2="14" y2="0" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
+            {/* Prime Meridian Line */}
+            <line x1="0" y1="-14" x2="0" y2="14" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
+            {/* Curved Meridian Ellipse */}
+            <ellipse cx="0" cy="0" rx="7.5" ry="14" stroke="#111111" strokeWidth="2" fill="none" />
+          </g>
+
+          {/* 2. TOP-LEFT ACCENT (SEMICOLON / COMMA) */}
+          {/* a) Top circular bead: filled with pastel blue (#CBEBF4) */}
+          <circle
+            cx="100"
+            cy="18"
+            r="7.5"
+            fill="#CBEBF4"
+            stroke="#111111"
             strokeWidth="2.5"
           />
-
-          {/* 2. Semicolon Punctuation Mark at neck of Blue Tab */}
-          {/* Top cyan circle */}
-          <circle cx="84" cy="24" r="7.5" fill="#D2F3FE" stroke="#000000" strokeWidth="2.2" />
-          {/* Bottom black curved comma */}
+          {/* b) Bottom comma: smooth curved comma/teardrop shape (no needle points) */}
           <path
-            d="M 84 34 C 88 34, 91 38, 89 43 C 87 49, 81 57, 78 60 C 79 54, 82 48, 82 44 C 81 42, 81 36, 84 34 Z"
-            fill="#000000"
+            d="M 94 33 C 94 29.5, 106 29.5, 106 33 C 106 38.5, 101 44, 98 48.5 C 96.5 50.5, 93.5 50.5, 93.5 48.5 C 93.5 46.5, 97 42.5, 97 38 C 94 38, 94 35.5, 94 33 Z"
+            fill="#111111"
+            stroke="#111111"
+            strokeWidth="1.2"
+            strokeLinejoin="round"
           />
 
-          {/* 3. Right Stacked Blue Beads */}
-          <circle cx="212" cy="106" r="11" fill="#4285F4" stroke="#000000" strokeWidth="2.5" />
-          <circle cx="212" cy="128" r="11" fill="#3B78E7" stroke="#000000" strokeWidth="2.5" />
-
-          {/* 4. Bottom-Right Pastel Cyan Wave */}
+          {/* 3. BOTTOM-RIGHT ORGANIC PASTEL WAVE (#CBEBF4) */}
           <path
-            d="M 218 138 A 118 118 0 0 1 150 220 C 160 200, 180 185, 188 165 C 196 150, 208 142, 218 138 Z"
-            fill="#D4F4FD"
-            stroke="#000000"
+            d="M 135 239 A 120 120 0 0 0 230 155 C 206 158, 186 182, 174 206 C 162 226, 148 236, 135 239 Z"
+            fill="#CBEBF4"
+            stroke="#111111"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+
+          {/* 4. DUAL STACKED ACCENT BEADS (#3B82F6) ALONG 3 O'CLOCK PERIMETER */}
+          {/* Top bead */}
+          <circle
+            cx="222"
+            cy="112"
+            r="10.5"
+            fill="#3B82F6"
+            stroke="#111111"
+            strokeWidth="2.5"
+          />
+          {/* Lower bead gently intersecting the crest of the pastel wave */}
+          <circle
+            cx="224"
+            cy="134"
+            r="10.5"
+            fill="#3B82F6"
+            stroke="#111111"
             strokeWidth="2.5"
           />
         </svg>
-
-        {/* Top-Left Globe Line-Art Icon inside Blue Tab */}
-        <div
-          title="Developer Profile"
-          className="absolute top-7 left-6 z-20 pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-115 text-black"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (githubUrl) window.open(githubUrl, "_blank", "noopener,noreferrer");
-          }}
-        >
-          <Globe className="w-5 h-5 text-black stroke-[2.2]" />
-        </div>
       </div>
 
-      {/* 5. Google Developer Logo Emblem Badge (Floating at bottom-right) */}
+      {/* 5. GOOGLE DEVELOPER CODE PILL (< >) FLOATING ON TOP AT 4:30 */}
       <div
         style={{ transform: "translateZ(48px)" }}
-        className="absolute bottom-3 right-2 z-30 bg-[#F8F9FA] border-[2.5px] border-black rounded-full px-3 py-1.5 shadow-[2px_3px_0px_rgba(0,0,0,0.85)] flex items-center justify-center transform rotate-[-4deg] hover:rotate-0 hover:scale-105 transition-all duration-200 pointer-events-none select-none"
+        className="absolute bottom-2.5 right-2 z-20 w-[64px] h-[32px] rounded-full bg-white border-[2px] border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center pointer-events-none select-none transition-transform duration-200 hover:scale-105"
       >
-        <svg width="34" height="20" viewBox="0 0 36 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Left Bracket < (Google Blue base + Red cap) */}
+        <svg width="44" height="20" viewBox="0 0 44 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Left Angle < : Google Blue (#4285F4) */}
           <path
-            d="M11 3.5L3.5 10L11 16.5"
+            d="M13 4L6 10L13 16"
             stroke="#4285F4"
-            strokeWidth="4.5"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <path d="M11 3.5L7.5 6.5" stroke="#EA4335" strokeWidth="4.5" strokeLinecap="round" />
-
-          {/* Right Bracket > (Google Green cap + Yellow base) */}
+          {/* Slash / : Yellow (#FBBC04) top and Green (#34A853) bottom */}
           <path
-            d="M25 3.5L32.5 10L25 16.5"
+            d="M24 4L20 10"
+            stroke="#FBBC04"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <path
+            d="M20 10L16 16"
             stroke="#34A853"
-            strokeWidth="4.5"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          {/* Right Angle > : Google Red (#EA4335) */}
+          <path
+            d="M31 4L38 10L31 16"
+            stroke="#EA4335"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <path d="M28.5 13.5L25 16.5" stroke="#FBBC04" strokeWidth="4.5" strokeLinecap="round" />
         </svg>
       </div>
     </div>
