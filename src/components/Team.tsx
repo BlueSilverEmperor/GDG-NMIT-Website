@@ -312,15 +312,6 @@ const GDGPictureFrame: React.FC<GDGPictureFrameProps> = ({
           <path d="M -7.6 4 Q 0 1.8 7.6 4" fill="none" stroke="#000000" strokeWidth="1.5" />
         </g>
 
-        {/* --- White Comma / Droplet Accent at Top-Right of Sector --- */}
-        <path
-          d="M 87 8 C 90.5 8 93 10.5 93 13.8 C 93 16.8 91.5 19 89.5 20.2 L 88.8 21.2 C 87.5 24 85 26.5 82.5 28.5 C 84 25.8 84.8 23.2 85 21 C 83 19.8 81.5 17.5 81.5 13.8 C 81.5 10.5 83.8 8 87 8 Z"
-          fill="#FFFFFF"
-          stroke="#000000"
-          strokeWidth="2.2"
-          strokeLinejoin="round"
-        />
-
         {/* --- Bottom-Right Organic Pastel Wave --- */}
         <path
           d="M 191 138 C 172 135 158 144 151 159 C 145 173 130 187 110 195.5 A 95.5 95.5 0 0 0 191 138 Z"
