@@ -41,7 +41,7 @@ const colorPalettes: Record<string, Palette> = {
     dotColor: "bg-[#4285F4]",
     glowColor: "rgba(66, 133, 244, 0.45)",
     sectorFill: "#4285F4",
-    sectorHover: "#FF6600",
+    sectorHover: "#185ABC",
     hex: "#4285F4",
     badgeBg: "bg-[#4285F4]/15",
     frameTopLeft: "#55BCF6",
@@ -58,7 +58,7 @@ const colorPalettes: Record<string, Palette> = {
     dotColor: "bg-[#EA4335]",
     glowColor: "rgba(234, 67, 53, 0.45)",
     sectorFill: "#EA4335",
-    sectorHover: "#FF6600",
+    sectorHover: "#B31412",
     hex: "#EA4335",
     badgeBg: "bg-[#EA4335]/15",
     frameTopLeft: "#F77B96",
@@ -75,7 +75,7 @@ const colorPalettes: Record<string, Palette> = {
     dotColor: "bg-[#FBBC04]",
     glowColor: "rgba(251, 188, 4, 0.45)",
     sectorFill: "#FBBC04",
-    sectorHover: "#FF6600",
+    sectorHover: "#C46200",
     hex: "#FBBC04",
     badgeBg: "bg-[#FBBC04]/15",
     frameTopLeft: "#F9D038",
@@ -92,7 +92,7 @@ const colorPalettes: Record<string, Palette> = {
     dotColor: "bg-[#34A853]",
     glowColor: "rgba(52, 168, 83, 0.45)",
     sectorFill: "#34A853",
-    sectorHover: "#FF6600",
+    sectorHover: "#137333",
     hex: "#34A853",
     badgeBg: "bg-[#34A853]/15",
     frameTopLeft: "#61D278",
@@ -548,10 +548,10 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
             viewBox="0 0 260 260"
           >
             <defs>
-              <filter id="glow-orange" x="-50%" y="-50%" width="200%" height="200%">
-                <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#FF6600" floodOpacity="0.9" />
+              <filter id={`glow-hover-${member._id}`} x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor={palette.sectorHover} floodOpacity="0.9" />
               </filter>
-              <filter id="glow-palette" x="-50%" y="-50%" width="200%" height="200%">
+              <filter id={`glow-palette-${member._id}`} x="-50%" y="-50%" width="200%" height="200%">
                 <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor={palette.hex} floodOpacity="0.6" />
               </filter>
             </defs>
@@ -568,11 +568,11 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
                 <path
                   key={quad.id}
                   d={pathD}
-                  fill={isQuadActive ? "#FF6600" : palette.sectorFill}
+                  fill={isQuadActive ? palette.sectorHover : palette.sectorFill}
                   stroke="#000000"
                   strokeWidth="2.5"
                   className="transition-all duration-300 ease-out cursor-pointer pointer-events-auto"
-                  filter={isQuadActive ? "url(#glow-orange)" : isMenuOpen ? "url(#glow-palette)" : undefined}
+                  filter={isQuadActive ? `url(#glow-hover-${member._id})` : isMenuOpen ? `url(#glow-palette-${member._id})` : undefined}
                   style={{
                     opacity: isMenuOpen ? (isQuadActive ? 1 : 0.88) : 0,
                     transform: isMenuOpen ? "scale(1)" : "scale(0.92)",
@@ -612,10 +612,11 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
                     top: `${coords.y}px`,
                     opacity: isMenuOpen ? 1 : 0,
                     transform: `translate(-50%, -50%) scale(${isQuadActive ? 1.25 : 1})`,
+                    filter: isQuadActive ? `drop-shadow(0 0 6px ${palette.sectorHover})` : undefined,
                   }}
                   className={`absolute w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 pointer-events-auto cursor-pointer ${
                     isQuadActive
-                      ? "text-white drop-shadow-[0_0_8px_rgba(255,102,0,1)]"
+                      ? "text-white"
                       : "text-black"
                   }`}
                   onMouseEnter={() => setActiveQuadrant(quad.id)}
@@ -643,7 +644,10 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
           className="w-full text-center my-3 min-h-[20px] flex items-center justify-center"
         >
           {activeQuadrant ? (
-            <span className="text-[#FF6600] font-mono font-bold tracking-wider text-xs">
+            <span
+              style={{ color: palette.sectorHover }}
+              className="font-mono font-bold tracking-wider text-xs transition-colors duration-200"
+            >
               {quadrants.find((q) => q.id === activeQuadrant)?.label}
             </span>
           ) : (
