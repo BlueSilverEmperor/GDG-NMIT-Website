@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:backup": "node scripts/backup_db.js",
+    "db:restore": "node scripts/restore_db.js"
   },
   "dependencies": {
     "@fontsource-variable/google-sans-code": "^5.2.3",
