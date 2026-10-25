@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState, useRef } from "react";
 import Image from "next/image";
-import { Github, Linkedin, Mail, ChevronDown, Eye, SlidersHorizontal, Sparkles } from "lucide-react";
+import { Github, Linkedin, Mail, ChevronDown } from "lucide-react";
 import type { Member, TeamData, TierMembers, MemberTierGroup } from "@/types/team";
 
 interface TeamProps {
@@ -227,169 +227,15 @@ function describeAnnularSector(
 }
 
 // -------------------------------------------------------------
-// Authentic GDG Illustrated Avatar Pic Frame
-// Refined to match exact Google Developer reference asset:
-// 1. Smooth rounded rectangular top-left tab with generous 36px inner corner
-// 2. Centered crisp wireframe globe icon
-// 3. Top-left accent semicolon (pastel blue #CBEBF4 dot + smooth curved comma)
-// 4. Wide, soft organic pastel blue wave (#CBEBF4) cresting around 4 o'clock
-// 5. Dual stacked theme accent blue (#3B82F6) beads at 3 o'clock intersecting wave
-// 6. 64x32px stadium Google code pill (< >) with Blue <, Yellow/Green /, Red >
-// -------------------------------------------------------------
-interface GDGAvatarPicFrameProps {
-  photoUrl: string;
-  name: string;
-  wedgeColor?: string;
-  className?: string;
-}
-
-const GDGAvatarPicFrame: React.FC<GDGAvatarPicFrameProps> = ({
-  photoUrl,
-  name,
-  wedgeColor = "#4DBBFF",
-  className = "",
-}) => {
-  return (
-    <div className={`relative w-[210px] h-[210px] sm:w-[220px] sm:h-[220px] select-none ${className}`}>
-      {/* ---------------- BASE CIRCULAR PHOTO & CLIPPED GEOMETRY ---------------- */}
-      <div className="relative w-full h-full rounded-full overflow-hidden border-[3.5px] border-[#111111] bg-neutral-900 shadow-xl">
-        {/* Member Photograph */}
-        <Image
-          src={photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
-          alt={name}
-          fill
-          sizes="240px"
-          className="object-cover object-center transition-transform duration-500 group-hover/tilt:scale-105"
-        />
-
-        {/* Clipped Decorative SVG Elements */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none z-10"
-          viewBox="0 0 240 240"
-        >
-          {/* 1. TOP-LEFT WEDGE WITH GENEROUSE 36px INNER CORNER */}
-          <path
-            d="M 2.4 96 A 120 120 0 0 1 88 4.4 L 88 60 A 36 36 0 0 1 52 96 L 2.4 96 Z"
-            fill={wedgeColor}
-            stroke="#111111"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-          />
-
-          {/* Centered Crisp Wireframe Globe Icon Inside Top-Left Tab */}
-          <g transform="translate(44, 48)">
-            {/* Globe Outer Circle */}
-            <circle cx="0" cy="0" r="14" stroke="#111111" strokeWidth="2.2" fill="none" />
-            {/* Equator Line */}
-            <line x1="-14" y1="0" x2="14" y2="0" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
-            {/* Prime Meridian Line */}
-            <line x1="0" y1="-14" x2="0" y2="14" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
-            {/* Curved Meridian Ellipse */}
-            <ellipse cx="0" cy="0" rx="7.5" ry="14" stroke="#111111" strokeWidth="2" fill="none" />
-          </g>
-
-          {/* 2. TOP-LEFT ACCENT (SEMICOLON / COMMA) */}
-          {/* a) Top circular bead: filled with pastel blue (#CBEBF4) */}
-          <circle
-            cx="100"
-            cy="18"
-            r="7.5"
-            fill="#CBEBF4"
-            stroke="#111111"
-            strokeWidth="2.5"
-          />
-          {/* b) Bottom comma: smooth curved comma/teardrop shape (no needle points) */}
-          <path
-            d="M 94 33 C 94 29.5, 106 29.5, 106 33 C 106 38.5, 101 44, 98 48.5 C 96.5 50.5, 93.5 50.5, 93.5 48.5 C 93.5 46.5, 97 42.5, 97 38 C 94 38, 94 35.5, 94 33 Z"
-            fill="#111111"
-            stroke="#111111"
-            strokeWidth="1.2"
-            strokeLinejoin="round"
-          />
-
-          {/* 3. BOTTOM-RIGHT ORGANIC PASTEL WAVE (#CBEBF4) */}
-          <path
-            d="M 135 239 A 120 120 0 0 0 230 155 C 206 158, 186 182, 174 206 C 162 226, 148 236, 135 239 Z"
-            fill="#CBEBF4"
-            stroke="#111111"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-          />
-
-          {/* 4. DUAL STACKED ACCENT BEADS (#3B82F6) ALONG 3 O'CLOCK PERIMETER */}
-          {/* Top bead */}
-          <circle
-            cx="222"
-            cy="112"
-            r="10.5"
-            fill="#3B82F6"
-            stroke="#111111"
-            strokeWidth="2.5"
-          />
-          {/* Lower bead gently intersecting the crest of the pastel wave */}
-          <circle
-            cx="224"
-            cy="134"
-            r="10.5"
-            fill="#3B82F6"
-            stroke="#111111"
-            strokeWidth="2.5"
-          />
-        </svg>
-      </div>
-
-      {/* 5. GOOGLE DEVELOPER CODE PILL (< >) FLOATING ON TOP AT 4:30 */}
-      <div
-        style={{ transform: "translateZ(48px)" }}
-        className="absolute bottom-2.5 right-2 z-20 w-[64px] h-[32px] rounded-full bg-white border-[2px] border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center pointer-events-none select-none transition-transform duration-200 hover:scale-105"
-      >
-        <svg width="44" height="20" viewBox="0 0 44 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Left Angle < : Google Blue (#4285F4) */}
-          <path
-            d="M13 4L6 10L13 16"
-            stroke="#4285F4"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Slash / : Yellow (#FBBC04) top and Green (#34A853) bottom */}
-          <path
-            d="M24 4L20 10"
-            stroke="#FBBC04"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          <path
-            d="M20 10L16 16"
-            stroke="#34A853"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          {/* Right Angle > : Google Red (#EA4335) */}
-          <path
-            d="M31 4L38 10L31 16"
-            stroke="#EA4335"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-    </div>
-  );
-};
-
-// -------------------------------------------------------------
-// Tilt Card with BeamNG 4-Quadrant Radial Menu & Avatar Frame
+// Tilt Card with BeamNG 4-Quadrant Radial Menu
 // -------------------------------------------------------------
 interface TiltCardProps {
   member: Member;
   domain: string;
   palette: Palette;
-  forceInspect: boolean;
 }
 
-const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspect }) => {
+const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [glare, setGlare] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
@@ -422,7 +268,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
     setActiveQuadrant(null);
   };
 
-  const isMenuOpen = forceInspect || isCardHovered;
+  const isMenuOpen = isCardHovered;
 
   // BeamNG Quadrants Configuration
   const quadrants = [
@@ -433,7 +279,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 205,
       endAngle: 265,
       iconCenterAngle: 235,
-      iconRadius: 122,
+      iconRadius: 110,
       url: member.githubUrl || "https://github.com",
       Icon: Github,
     },
@@ -444,7 +290,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 295,
       endAngle: 355,
       iconCenterAngle: 325,
-      iconRadius: 122,
+      iconRadius: 110,
       url: member.linkedinUrl || "https://linkedin.com",
       Icon: Linkedin,
     },
@@ -455,7 +301,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 25,
       endAngle: 85,
       iconCenterAngle: 55,
-      iconRadius: 122,
+      iconRadius: 110,
       url: member.twitterUrl || "https://x.com",
       Icon: ({ className }: { className?: string }) => (
         <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -470,7 +316,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
       startAngle: 115,
       endAngle: 175,
       iconCenterAngle: 145,
-      iconRadius: 122,
+      iconRadius: 110,
       url: `mailto:${member.name.toLowerCase().replace(/\s+/g, "")}@gmail.com`,
       Icon: Mail,
     },
@@ -530,17 +376,17 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
         <div className="w-full h-[1px] bg-white/10 mb-4" />
 
         {/* ---------------- CENTER STAGE: AVATAR & RADIAL MENU ---------------- */}
-        <div className="relative w-[270px] h-[270px] flex items-center justify-center my-1">
-          {/* SVG 4-Quadrant BeamNG Radial Menu (surrounding the avatar) */}
+        <div className="relative w-[260px] h-[260px] flex items-center justify-center my-2">
+          {/* SVG 4-Quadrant BeamNG Radial Menu */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible"
-            viewBox="0 0 270 270"
+            viewBox="0 0 260 260"
           >
             <defs>
-              <filter id={`glow-orange-${member._id}`} x="-50%" y="-50%" width="200%" height="200%">
+              <filter id="glow-orange" x="-50%" y="-50%" width="200%" height="200%">
                 <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#FF6600" floodOpacity="0.9" />
               </filter>
-              <filter id={`glow-palette-${member._id}`} x="-50%" y="-50%" width="200%" height="200%">
+              <filter id="glow-palette" x="-50%" y="-50%" width="200%" height="200%">
                 <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor={palette.hex} floodOpacity="0.6" />
               </filter>
             </defs>
@@ -548,10 +394,10 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
             {/* 4 Annular Radial Quadrants */}
             {quadrants.map((quad) => {
               const isQuadActive = activeQuadrant === quad.id;
-              // Expand from inner avatar radius ~110 to outer radius ~138 on open/hover
-              const rInner = 110;
-              const rOuter = isMenuOpen ? (isQuadActive ? 140 : 134) : 111;
-              const pathD = describeAnnularSector(135, 135, rInner, rOuter, quad.startAngle, quad.endAngle);
+              // Animate inner & outer radius based on open/hover state
+              const rInner = 97;
+              const rOuter = isMenuOpen ? (isQuadActive ? 128 : 122) : 98;
+              const pathD = describeAnnularSector(130, 130, rInner, rOuter, quad.startAngle, quad.endAngle);
 
               return (
                 <path
@@ -561,17 +407,11 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
                   stroke="#000000"
                   strokeWidth="2.5"
                   className="transition-all duration-300 ease-out cursor-pointer pointer-events-auto"
-                  filter={
-                    isQuadActive
-                      ? `url(#glow-orange-${member._id})`
-                      : isMenuOpen
-                      ? `url(#glow-palette-${member._id})`
-                      : undefined
-                  }
+                  filter={isQuadActive ? "url(#glow-orange)" : isMenuOpen ? "url(#glow-palette)" : undefined}
                   style={{
                     opacity: isMenuOpen ? (isQuadActive ? 1 : 0.88) : 0,
                     transform: isMenuOpen ? "scale(1)" : "scale(0.92)",
-                    transformOrigin: "135px 135px",
+                    transformOrigin: "130px 130px",
                   }}
                   onMouseEnter={() => setActiveQuadrant(quad.id)}
                   onMouseLeave={() => setActiveQuadrant(null)}
@@ -591,7 +431,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
           >
             {quadrants.map((quad) => {
               const isQuadActive = activeQuadrant === quad.id;
-              const coords = polarToCartesian(135, 135, quad.iconRadius, quad.iconCenterAngle);
+              const coords = polarToCartesian(130, 130, quad.iconRadius, quad.iconCenterAngle);
               const IconComp = quad.Icon;
 
               return (
@@ -623,12 +463,39 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
             })}
           </div>
 
-          {/* Central Illustrated GDG Avatar Pic Frame (translateZ: 30px) */}
-          <div style={{ transform: "translateZ(30px)" }} className="relative z-10">
-            <GDGAvatarPicFrame
-              photoUrl={member.photoUrl}
-              name={member.name}
-              githubUrl={member.githubUrl}
+          {/* Central Circular Avatar */}
+          <div
+            style={{ transform: "translateZ(30px)" }}
+            className={`relative w-[190px] h-[190px] rounded-full overflow-hidden border-[3px] border-black bg-neutral-900 shadow-inner z-10 transition-transform duration-300 ${
+              isCardHovered ? "scale-[1.02]" : "scale-100"
+            }`}
+          >
+            <Image
+              src={member.photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
+              alt={member.name}
+              fill
+              sizes="220px"
+              className="object-cover md:grayscale group-hover/tilt:grayscale-0 transition-all duration-300"
+            />
+          </div>
+
+          {/* Google Code Badge (< / >) */}
+          <div
+            style={{ transform: "translateZ(48px)" }}
+            className="absolute bottom-3 right-5 z-30 flex items-center justify-center bg-white border-[2.5px] border-black rounded-full px-2.5 py-0.5 shadow-md font-mono font-black text-xs pointer-events-none select-none"
+          >
+            <span className="text-[#4285F4]">&lt;</span>
+            <span className="text-[#EA4335]">/</span>
+            <span className="text-[#34A853]">&gt;</span>
+          </div>
+
+          {/* Accent Beads on the Right Edge (Matching UI specification) */}
+          <div className="absolute right-0.5 top-1/2 -translate-y-1/2 flex flex-col gap-1.5 pointer-events-none z-20">
+            <span
+              className={`w-3.5 h-3.5 rounded-full ${palette.dotColor} border-[2px] border-black shadow-sm`}
+            />
+            <span
+              className={`w-3.5 h-3.5 rounded-full ${palette.dotColor} border-[2px] border-black shadow-sm`}
             />
           </div>
         </div>
@@ -681,8 +548,6 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette, forceInspe
 // -------------------------------------------------------------
 const Team: React.FC<TeamProps> = ({ teamData }) => {
   const [selectedDomain, setSelectedDomain] = useState<string>("all");
-  const [selectedColor, setSelectedColor] = useState<string>("all");
-  const [forceInspect, setForceInspect] = useState<boolean>(false);
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
 
   const toggleDomainDropdown = (domain: string) => {
@@ -727,11 +592,8 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
       ? activeDomains
       : activeDomains.filter((d) => d === selectedDomain);
 
-  // Helper to resolve card palette (cycles or locks to selected color filter)
+  // Helper to resolve card palette cycling through Google brand colors
   const getCardPalette = (index: number): Palette => {
-    if (selectedColor !== "all" && colorPalettes[selectedColor]) {
-      return colorPalettes[selectedColor];
-    }
     const key = paletteKeys[index % paletteKeys.length];
     return colorPalettes[key];
   };
@@ -740,77 +602,14 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
     <div className="min-h-screen bg-[#08090C] text-white pt-20 pb-28">
       <div className="px-6 max-w-7xl mx-auto">
         {/* Header Title Section */}
-        <div className="mb-10 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300 mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-[#FBBC04]" />
-            <span>Interactive 3D BeamNG Physics Showcase</span>
-          </div>
+        <div className="mb-12 text-center sm:text-left">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
             Meet Our Team
           </h1>
-          <p className="mt-2 text-gray-400 text-sm sm:text-base max-w-2xl font-sans">
-            Explore our leads, core team, and community contributors with 3D perspective tilt,
-            dynamic glare, and 4-quadrant radial social nodes.
+          <div className="h-1.5 w-24 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-3 mb-4" />
+          <p className="text-gray-400 text-sm sm:text-base max-w-2xl font-sans">
+            The passionate leads, core members, and organizers powering Google Developer Groups on Campus NMIT.
           </p>
-        </div>
-
-        {/* ---------------- CONTROL BAR & PALETTE FILTERS ---------------- */}
-        <div className="mb-12 p-4 sm:p-5 rounded-3xl bg-[#101217] border border-white/10 shadow-xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-          {/* Left: Inspect Radial Menus Force Toggle */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setForceInspect(!forceInspect)}
-              className={`inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer border-2 ${
-                forceInspect
-                  ? "bg-[#FF6600] text-black border-[#FF6600] shadow-[0_0_16px_rgba(255,102,0,0.6)]"
-                  : "bg-white/5 text-gray-300 border-white/20 hover:bg-white/10 hover:border-white/40"
-              }`}
-            >
-              <Eye className="w-4 h-4" />
-              <span>Inspect Radial Menus: {forceInspect ? "ENABLED" : "OFF"}</span>
-            </button>
-            <span className="text-[11px] font-mono text-gray-500 hidden sm:inline">
-              (Forces all 4-quadrant menus open)
-            </span>
-          </div>
-
-          {/* Right: Color Palette Filters */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-1.5 text-xs font-mono text-gray-400 mr-1">
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              <span>Palette:</span>
-            </div>
-
-            <button
-              onClick={() => setSelectedColor("all")}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer ${
-                selectedColor === "all"
-                  ? "bg-white text-black border-white shadow-md"
-                  : "bg-white/5 text-gray-400 border-white/10 hover:text-white"
-              }`}
-            >
-              All Google
-            </button>
-
-            {paletteKeys.map((key) => {
-              const pal = colorPalettes[key];
-              const isSelected = selectedColor === key;
-              return (
-                <button
-                  key={key}
-                  onClick={() => setSelectedColor(key)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer ${
-                    isSelected
-                      ? `${pal.primaryBg} text-black border-white shadow-[0_0_12px_${pal.glowColor}]`
-                      : "bg-white/5 text-gray-400 border-white/10 hover:text-white"
-                  }`}
-                >
-                  <span className={`w-2 h-2 rounded-full ${pal.dotColor}`} />
-                  <span>{pal.name}</span>
-                </button>
-              );
-            })}
-          </div>
         </div>
 
         {/* ---------------- DOMAIN FILTER PILLS ---------------- */}
@@ -879,7 +678,6 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
                     member={member}
                     domain={domain}
                     palette={getCardPalette(index)}
-                    forceInspect={forceInspect}
                   />
                 ))}
               </div>
@@ -910,7 +708,6 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
                         member={member}
                         domain={domain}
                         palette={getCardPalette(coreMembers.length + index)}
-                        forceInspect={forceInspect}
                       />
                     ))}
                   </div>
