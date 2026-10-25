@@ -606,10 +606,7 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
             Meet Our Team
           </h1>
-          <div className="h-1.5 w-24 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-3 mb-4" />
-          <p className="text-gray-400 text-sm sm:text-base max-w-2xl font-sans">
-            The passionate leads, core members, and organizers powering Google Developer Groups on Campus NMIT.
-          </p>
+          <div className="h-1.5 w-24 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] rounded-full mt-3" />
         </div>
 
         {/* ---------------- DOMAIN FILTER PILLS ---------------- */}
