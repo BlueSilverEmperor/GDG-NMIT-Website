@@ -271,8 +271,11 @@ const GDGPictureFrame: React.FC<GDGPictureFrameProps> = ({
           src={photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"}
           alt={name}
           fill
-          sizes="220px"
-          className="object-cover group-hover/tilt:scale-105 transition-all duration-300"
+          className={`object-cover transition-all duration-500 ease-out ${
+            isHovered
+              ? "grayscale-0 contrast-100 scale-105"
+              : "grayscale contrast-[1.08] brightness-95 scale-100"
+          }`}
         />
       </div>
 
