@@ -270,12 +270,11 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
 
   const isMenuOpen = isCardHovered;
 
-  // BeamNG Quadrants Configuration
+  // Quadrants Configuration
   const quadrants = [
     {
       id: "TL",
-      label: "GITHUB",
-      code: "QUADRANT_TL // GITHUB",
+      label: "GitHub Profile",
       startAngle: 205,
       endAngle: 265,
       iconCenterAngle: 235,
@@ -285,8 +284,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
     },
     {
       id: "TR",
-      label: "LINKEDIN",
-      code: "QUADRANT_TR // LINKEDIN",
+      label: "LinkedIn Profile",
       startAngle: 295,
       endAngle: 355,
       iconCenterAngle: 325,
@@ -296,8 +294,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
     },
     {
       id: "BR",
-      label: "TWITTER",
-      code: "QUADRANT_BR // TWITTER",
+      label: "X Profile",
       startAngle: 25,
       endAngle: 85,
       iconCenterAngle: 55,
@@ -311,8 +308,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
     },
     {
       id: "BL",
-      label: "EMAIL",
-      code: "QUADRANT_BL // EMAIL",
+      label: "Email",
       startAngle: 115,
       endAngle: 175,
       iconCenterAngle: 145,
@@ -506,12 +502,12 @@ const TiltCard: React.FC<TiltCardProps> = ({ member, domain, palette }) => {
           className="w-full text-center my-3 min-h-[20px] flex items-center justify-center"
         >
           {activeQuadrant ? (
-            <span className="text-[#FF6600] font-mono font-bold tracking-[0.2em] text-[11px] animate-pulse">
-              {quadrants.find((q) => q.id === activeQuadrant)?.code}
+            <span className="text-[#FF6600] font-mono font-bold tracking-wider text-xs">
+              {quadrants.find((q) => q.id === activeQuadrant)?.label}
             </span>
           ) : (
-            <span className="text-[10px] font-mono tracking-[0.28em] text-gray-500 uppercase transition-opacity duration-300">
-              {isMenuOpen ? "RADIAL MENU ACTIVE" : "HOVER TO EXPAND"}
+            <span className="text-[11px] font-mono tracking-widest text-gray-500 uppercase transition-opacity duration-300">
+              {isMenuOpen ? "Select Profile" : "Hover To Connect"}
             </span>
           )}
         </div>
