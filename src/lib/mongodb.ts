@@ -1,6 +1,16 @@
 import { MongoClient } from 'mongodb';
+import dns from 'dns';
 
-const uri = process.env.MONGODB_URI;
+// Ensure SRV DNS resolution succeeds across local resolvers
+if (typeof dns.setServers === 'function') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch {
+    // Ignore if not permitted
+  }
+}
+
+const uri = process.env.MONGODB_URI || process.env.MONGO_URL;
 let client: MongoClient | null = null;
 
 export async function connectToDatabase() {

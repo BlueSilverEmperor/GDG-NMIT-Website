@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require("fs");
 const path = require("path");
+const dns = require("dns");
 const { MongoClient, BSON } = require("mongodb");
+
+if (typeof dns.setServers === "function") {
+  try {
+    dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  } catch {}
+}
 
 // 1. Safe loading of .env.local if present
 const envPath = path.join(__dirname, "..", ".env.local");
